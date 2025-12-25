@@ -6,7 +6,7 @@ const app = express();
 const URL = require("./models/url")
 const path = require("path")
 const cookieParser = require('cookie-parser')
-const {restrictToLoggedinUserOnly} = require('./middlewares/auth')
+const {restrictToLoggedinUserOnly, checkAuth} = require('./middlewares/auth')
 require('dotenv').config()
 
 const urlRoute = require('./routes/url')
@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 app.use('/url', restrictToLoggedinUserOnly, urlRoute);
 app.use('/user', userRoute);
-app.use('/', staticRoute);
+app.use('/', checkAuth, staticRoute);
 
 app.get('/:shortId', async (req, res) => {
     const shortId = req.params.shortId;
